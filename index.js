@@ -2,9 +2,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const taskInput = document.getElementById('taskInput');
     const addTaskBtn = document.getElementById('addTaskBtn');
     const taskList = document.getElementById('taskList');
+    const dialog = document.getElementById('dialog');
+    const closeBtn = dialog.querySelector('.close');
 
     // Load tasks from local storage when the page loads
     loadTasks();
+
+    addTaskBtn.title = "Add Task"; // Tooltip for Add Task button
 
     addTaskBtn.addEventListener('click', function() {
         const taskText = taskInput.value.trim();
@@ -12,6 +16,8 @@ document.addEventListener('DOMContentLoaded', function() {
             addTask(taskText);
             saveTasks();
             taskInput.value = '';
+        } else {
+            dialog.style.display = 'block'; // Show the dialog box
         }
     });
 
@@ -19,6 +25,12 @@ document.addEventListener('DOMContentLoaded', function() {
         if (event.key === 'Enter') {
             addTaskBtn.click();
         }
+    });
+
+    closeBtn.title = "Close"; // Tooltip for Close button
+
+    closeBtn.addEventListener('click', function() {
+        dialog.style.display = 'none'; // Hide the dialog box when the close button is clicked
     });
 
     taskList.addEventListener('click', function(event) {
@@ -44,8 +56,9 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             const saveButton = document.createElement('button');
-            saveButton.textContent = 'Save';
+            saveButton.textContent = '💾'; // Unicode for floppy disk
             saveButton.classList.add('saveButton');
+            saveButton.title = "Save"; // Tooltip for Save button
             taskItem.appendChild(saveButton);
             saveButton.addEventListener('click', function() {
                 taskText.textContent = taskInputField.value.trim();
@@ -65,10 +78,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const deleteButton = document.createElement('button');
         deleteButton.textContent = '❌'; // Unicode for X mark
         deleteButton.classList.add('deleteButton'); // Add a class to the delete button
+        deleteButton.title = "Delete"; // Tooltip for Delete button
 
         const editButton = document.createElement('button');
         editButton.textContent = '✎'; // Unicode for pencil mark
         editButton.classList.add('editButton'); // Add a class to the edit button
+        editButton.title = "Edit"; // Tooltip for Edit button
 
         taskItem.appendChild(taskTextSpan);
         taskItem.appendChild(deleteButton);
