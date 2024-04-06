@@ -22,29 +22,66 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     taskList.addEventListener('click', function(event) {
-        if (event.target.classList.contains('deleteButton')) {
-            event.target.parentElement.remove(); // Remove the task item from the DOM
+        const target = event.target;
+        if (target.classList.contains('deleteButton')) {
+            target.parentElement.remove(); // Remove the task item from the DOM
             saveTasks(); // Update local storage after removal
+        } else if (target.classList.contains('editButton')) {
+            const taskItem = target.parentElement;
+            const taskText = taskItem.querySelector('.taskText');
+            const taskInputField = document.createElement('input');
+            taskInputField.type = 'text';
+            taskInputField.value = taskText.textContent;
+            taskText.textContent = ''; // Clear the text content
+            taskText.appendChild(taskInputField);
+            taskInputField.focus();
+            taskInputField.addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    taskText.textContent = taskInputField.value.trim();
+                    saveTasks(); // Update local storage after editing
+                    taskInputField.remove();
+                }
+            });
+
+            const saveButton = document.createElement('button');
+            saveButton.textContent = 'Save';
+            saveButton.classList.add('saveButton');
+            taskItem.appendChild(saveButton);
+            saveButton.addEventListener('click', function() {
+                taskText.textContent = taskInputField.value.trim();
+                saveTasks(); // Update local storage after editing
+                taskInputField.remove();
+                saveButton.remove();
+            });
         }
     });
 
     function addTask(taskText) {
         const taskItem = document.createElement('li');
-        taskItem.textContent = taskText;
+        const taskTextSpan = document.createElement('span');
+        taskTextSpan.textContent = taskText;
+        taskTextSpan.classList.add('taskText');
 
         const deleteButton = document.createElement('button');
         deleteButton.textContent = '❌'; // Unicode for X mark
         deleteButton.classList.add('deleteButton'); // Add a class to the delete button
+
+        const editButton = document.createElement('button');
+        editButton.textContent = '✎'; // Unicode for pencil mark
+        editButton.classList.add('editButton'); // Add a class to the edit button
+
+        taskItem.appendChild(taskTextSpan);
         taskItem.appendChild(deleteButton);
+        taskItem.appendChild(editButton);
 
         taskList.appendChild(taskItem);
     }
 
     function saveTasks() {
         const tasks = [];
-        const taskItems = document.querySelectorAll('#taskList li');
+        const taskItems = document.querySelectorAll('#taskList .taskText');
         taskItems.forEach(function(taskItem) {
-            tasks.push(taskItem.textContent.replace('❌', '').trim()); // Remove the X button before saving
+            tasks.push(taskItem.textContent.trim());
         });
         localStorage.setItem('tasks', JSON.stringify(tasks));
     }

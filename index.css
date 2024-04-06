@@ -24,9 +24,6 @@ input[type="text"] {
 
 button {
     padding: 10px 20px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
     cursor: pointer;
 }
 
@@ -46,14 +43,25 @@ li {
     margin-bottom: 10px;
 }
 
-.taskName {
+.taskText {
     flex-grow: 1;
+    word-wrap: break-word; /* Wrap long words */
+    overflow-wrap: break-word; /* Wrap on the character in long words */
+    max-width: 60% /* Limit the width of the task text container */
 }
 
-.deleteButton {
+
+
+.deleteButton,
+.editButton,
+.saveButton {
     background: none;
     border: none;
     font-size: 1.2em;
     color: red;
     cursor: pointer;
+}
+
+.taskButtons {
+    display: flex;
 }
